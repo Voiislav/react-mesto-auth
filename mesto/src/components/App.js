@@ -1,34 +1,83 @@
-import Header from './Header.js';
-import Main from './Main.js';
-import Footer from './Footer.js';
-import PopupWithForm from './PopupWithForm.js';
+import React from "react";
+import Header from "./Header.js";
+import Main from "./Main.js";
+import Footer from "./Footer.js";
+import PopupWithForm from "./PopupWithForm.js";
+import api from "../utils/Api.js";
+import ImagePopup from "./ImagePopup.js";
 
 function App() {
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
+  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
+  const [userName, setUserName] = React.useState();
+  const [userDescription, setUserDescription] = React.useState();
+  const [userAvatar, setUserAvatar] = React.useState();
+
+  React.useEffect(() => {
+    api.getUserData()
+      .then((userData) => {
+        setUserName(userData.name);
+        setUserDescription(userData.about);
+        setUserAvatar(userData.avatar);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  function handleEditAvatarClick() {
+    setEditProfilePopupOpen(true);
+    document.addEventListener('keydown', closeOnEscapeButton);
+  }
+
+  function handleEditProfileClick() {
+    setEditAvatarPopupOpen(true);
+    document.addEventListener('keydown', closeOnEscapeButton);
+  }
+
+  function handleAddPlaceClick() {
+    setAddPlacePopupOpen(true);
+    document.addEventListener('keydown', closeOnEscapeButton);
+  }
+
+  function closeAllPopups() {
+    setEditProfilePopupOpen(false);
+    setEditAvatarPopupOpen(false);
+    setAddPlacePopupOpen(false);
+    document.removeEventListener('keydown', closeOnEscapeButton);
+  }
+
+  function closeOnEscapeButton(evt) {
+    if (evt.key === 'Escape') {
+      closeAllPopups();
+    }
+  }
+
   return (
     <div className="page">
       <Header />
-      <Main />
+      <Main 
+      onEditAvatar={handleEditAvatarClick}
+      onEditProfile={handleEditProfileClick}
+      onAddPlace={handleAddPlaceClick}
+      userName={userName}
+      userDescription={userDescription}
+      userAvatar={userAvatar}
+      />
       <Footer />
       <PopupWithForm />
-      <section className="popup popup_type_edit">
-    <div className="popup__container">
-      <button
-        type="button"
-        className="popup__close"
-        aria-label="Закрыть окно редактирования профиля"
-      />
-      <h2 className="popup__title">Редактировать профиль</h2>
-      <form
-        className="popup__form popup__form_type_edit"
-        name="submitFormEdit"
-        noValidate=""
+      <PopupWithForm 
+      title="Редактировать профиль" 
+      name="edit"
+      isOpen={isEditProfilePopupOpen}
+      onClose={closeAllPopups}
       >
         <input
           type="text"
           name="name"
           className="popup__text popup__text_type_name"
           id="user-name"
-          defaultValue=" "
           placeholder="Введите имя"
           required=""
           minLength={2}
@@ -40,7 +89,6 @@ function App() {
           name="job"
           className="popup__text popup__text_type_job"
           id="user-job"
-          defaultValue=" "
           placeholder="Введите род занятий"
           required=""
           minLength={2}
@@ -55,21 +103,12 @@ function App() {
         >
           Сохранить
         </button>
-      </form>
-    </div>
-  </section>
-  <section className="popup popup_type_add">
-    <div className="popup__container">
-      <button
-        type="button"
-        className="popup__close"
-        aria-label="Закрыть окно добавления карточки"
-      />
-      <h2 className="popup__title">Новое место</h2>
-      <form
-        className="popup__form popup__form_type_add"
-        name="submitFormAdd"
-        noValidate=""
+      </PopupWithForm>
+      <PopupWithForm 
+      title="Новое место" 
+      name="add"
+      isOpen={isAddPlacePopupOpen}
+      onClose={closeAllPopups}
       >
         <input
           type="text"
@@ -96,33 +135,15 @@ function App() {
           name="submitButton"
           aria-label="Сохранить изменения"
           className="popup__submit popup__submit_type_add"
-          disabled=""
         >
           Создать
         </button>
-      </form>
-    </div>
-  </section>
-  <section className="popup popup_type_image">
-    <div className="popup__container popup__container_type_image">
-      <img className="popup__image" />
-      <h2 className="popup__title popup__title_type_image" />
-      <button
-        type="button"
-        className="popup__close"
-        aria-label="Закрыть окно c картинкой"
-      />
-    </div>
-  </section>
-  <section className="popup popup_type_confirm">
-    <div className="popup__container">
-      <button
-        type="button"
-        className="popup__close"
-        aria-label="Закрыть окно подтверждения удаления карточки"
-      />
-      <h2 className="popup__title">Вы уверены?</h2>
-      <form className="popup__form">
+      </PopupWithForm>
+      <PopupWithForm 
+      title="Вы уверены?" 
+      name="confirm"
+      onClose={closeAllPopups}
+      >
         <button
           type="submit"
           name="submitButton"
@@ -131,18 +152,13 @@ function App() {
         >
           Да
         </button>
-      </form>
-    </div>
-  </section>
-  <section className="popup popup_type_change-avatar">
-    <div className="popup__container popup__container_type_change-avatar">
-      <button
-        type="button"
-        className="popup__close"
-        aria-label="Закрыть окно изменения аватара"
-      />
-      <h3 className="popup__title">Обновить аватар</h3>
-      <form className="popup__form" name="popupFormAvatar" noValidate="">
+      </PopupWithForm>
+      <PopupWithForm 
+      title="Обновить аватар" 
+      name="change-avatar"
+      isOpen={isEditAvatarPopupOpen}
+      onClose={closeAllPopups}
+      >
         <input
           type="url"
           name="link"
@@ -161,9 +177,7 @@ function App() {
         >
           Сохранить
         </button>
-      </form>
-    </div>
-  </section>
+      </PopupWithForm>      
     </div>
   );
 }

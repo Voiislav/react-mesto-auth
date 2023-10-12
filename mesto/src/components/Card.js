@@ -1,6 +1,11 @@
 import basketIcon from "../images/basket_icon.svg";
 
-function Card({ name, link, likes }) {
+function Card({ name, link, likes, onCardClick }) {
+
+  function handleClick() {
+    onCardClick({ name, link });
+  }
+
   return (
     <>
       <figure className="element">
@@ -8,6 +13,7 @@ function Card({ name, link, likes }) {
           type="button"
           className="element__zoom"
           aria-label="Увеличить фото"
+          onClick={handleClick}
         ></button>
         <button
           type="button"

@@ -8,6 +8,7 @@ function Main({
   userDescription,
   userAvatar,
   cards,
+  onCardClick
 }) {
   return (
     <>
@@ -54,6 +55,7 @@ function Main({
             link={card.link}
             likes={card.likes}
             key={card._id}
+            onCardClick={onCardClick}
           />
         ))}
         </section>

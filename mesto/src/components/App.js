@@ -10,14 +10,16 @@ function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
+  const [isImagePopupOpen, setImagePopupOpen] = React.useState(false);
   const [userName, setUserName] = React.useState();
   const [userDescription, setUserDescription] = React.useState();
   const [userAvatar, setUserAvatar] = React.useState();
   const [cards, setCards] = React.useState([]);
+  const [selectedCard, setSelectedCard] = React.useState({});
 
   React.useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
-    .then(([userData, cardsData]) => {
+      .then(([userData, cardsData]) => {
         setUserName(userData.name);
         setUserDescription(userData.about);
         setUserAvatar(userData.avatar);
@@ -30,28 +32,35 @@ function App() {
 
   function handleEditAvatarClick() {
     setEditProfilePopupOpen(true);
-    document.addEventListener('keydown', closeOnEscapeButton);
+    document.addEventListener("keydown", closeOnEscapeButton);
   }
 
   function handleEditProfileClick() {
     setEditAvatarPopupOpen(true);
-    document.addEventListener('keydown', closeOnEscapeButton);
+    document.addEventListener("keydown", closeOnEscapeButton);
   }
 
   function handleAddPlaceClick() {
     setAddPlacePopupOpen(true);
-    document.addEventListener('keydown', closeOnEscapeButton);
+    document.addEventListener("keydown", closeOnEscapeButton);
+  }
+
+  function handleCardClick(card) {
+    setSelectedCard(card);
+    setImagePopupOpen(true);
+    document.addEventListener("keydown", closeOnEscapeButton);
   }
 
   function closeAllPopups() {
     setEditProfilePopupOpen(false);
     setEditAvatarPopupOpen(false);
     setAddPlacePopupOpen(false);
-    document.removeEventListener('keydown', closeOnEscapeButton);
+    setImagePopupOpen(false);
+    document.removeEventListener("keydown", closeOnEscapeButton);
   }
 
   function closeOnEscapeButton(evt) {
-    if (evt.key === 'Escape') {
+    if (evt.key === "Escape") {
       closeAllPopups();
     }
   }
@@ -59,22 +68,23 @@ function App() {
   return (
     <div className="page">
       <Header />
-      <Main 
-      onEditAvatar={handleEditAvatarClick}
-      onEditProfile={handleEditProfileClick}
-      onAddPlace={handleAddPlaceClick}
-      userName={userName}
-      userDescription={userDescription}
-      userAvatar={userAvatar}
-      cards={cards}
+      <Main
+        onEditAvatar={handleEditAvatarClick}
+        onEditProfile={handleEditProfileClick}
+        onAddPlace={handleAddPlaceClick}
+        userName={userName}
+        userDescription={userDescription}
+        userAvatar={userAvatar}
+        cards={cards}
+        onCardClick={handleCardClick}
       />
       <Footer />
       <PopupWithForm />
-      <PopupWithForm 
-      title="Редактировать профиль" 
-      name="edit"
-      isOpen={isEditProfilePopupOpen}
-      onClose={closeAllPopups}
+      <PopupWithForm
+        title="Редактировать профиль"
+        name="edit"
+        isOpen={isEditProfilePopupOpen}
+        onClose={closeAllPopups}
       >
         <input
           type="text"
@@ -107,11 +117,11 @@ function App() {
           Сохранить
         </button>
       </PopupWithForm>
-      <PopupWithForm 
-      title="Новое место" 
-      name="add"
-      isOpen={isAddPlacePopupOpen}
-      onClose={closeAllPopups}
+      <PopupWithForm
+        title="Новое место"
+        name="add"
+        isOpen={isAddPlacePopupOpen}
+        onClose={closeAllPopups}
       >
         <input
           type="text"
@@ -142,10 +152,10 @@ function App() {
           Создать
         </button>
       </PopupWithForm>
-      <PopupWithForm 
-      title="Вы уверены?" 
-      name="confirm"
-      onClose={closeAllPopups}
+      <PopupWithForm
+        title="Вы уверены?"
+        name="confirm"
+        onClose={closeAllPopups}
       >
         <button
           type="submit"
@@ -156,11 +166,11 @@ function App() {
           Да
         </button>
       </PopupWithForm>
-      <PopupWithForm 
-      title="Обновить аватар" 
-      name="change-avatar"
-      isOpen={isEditAvatarPopupOpen}
-      onClose={closeAllPopups}
+      <PopupWithForm
+        title="Обновить аватар"
+        name="change-avatar"
+        isOpen={isEditAvatarPopupOpen}
+        onClose={closeAllPopups}
       >
         <input
           type="url"
@@ -180,7 +190,12 @@ function App() {
         >
           Сохранить
         </button>
-      </PopupWithForm>      
+      </PopupWithForm>
+      <ImagePopup
+        card={selectedCard}
+        isOpen={isImagePopupOpen}
+        onClose={closeAllPopups}
+      ></ImagePopup>
     </div>
   );
 }

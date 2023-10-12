@@ -13,13 +13,15 @@ function App() {
   const [userName, setUserName] = React.useState();
   const [userDescription, setUserDescription] = React.useState();
   const [userAvatar, setUserAvatar] = React.useState();
+  const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
-    api.getUserData()
-      .then((userData) => {
+    Promise.all([api.getUserData(), api.getInitialCards()])
+    .then(([userData, cardsData]) => {
         setUserName(userData.name);
         setUserDescription(userData.about);
         setUserAvatar(userData.avatar);
+        setCards(cardsData);
       })
       .catch((error) => {
         console.error(error);
@@ -64,6 +66,7 @@ function App() {
       userName={userName}
       userDescription={userDescription}
       userAvatar={userAvatar}
+      cards={cards}
       />
       <Footer />
       <PopupWithForm />

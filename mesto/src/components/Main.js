@@ -1,4 +1,4 @@
-import basketIcon from "../images/basket_icon.svg";
+import Card from './Card.js';
 
 function Main({
   onEditProfile,
@@ -6,7 +6,8 @@ function Main({
   onEditAvatar,
   userName,
   userDescription,
-  userAvatar
+  userAvatar,
+  cards,
 }) {
   return (
     <>
@@ -46,38 +47,16 @@ function Main({
             aria-label="Добавить контент"
           />
         </section>
-        <section className="elements"></section>
-        <template
-          className="elements-template"
-          aria-label="Карточки с фотографиями"
-        >
-          <figure className="element">
-            <button
-              type="button"
-              className="element__zoom"
-              aria-label="Увеличить фото"
-            ></button>
-            <button
-              type="button"
-              className="element__trash"
-              aria-label="Удалить карточку"
-            >
-              <img src={basketIcon} alt="Иконка мусорной корзины" />
-            </button>
-            <img className="element__photo" />
-            <figcaption className="element__caption">
-              <h2 className="element__title"></h2>
-              <div className="element__like-area">
-                <button
-                  type="button"
-                  className="element__like"
-                  aria-label="Поставить лайк"
-                ></button>
-                <p className="element__likes-number"></p>
-              </div>
-            </figcaption>
-          </figure>
-        </template>
+        <section className="elements">
+        {cards.map((card) => (
+          <Card
+            name={card.name}
+            link={card.link}
+            likes={card.likes}
+            key={card._id}
+          />
+        ))}
+        </section>
       </main>
     </>
   );

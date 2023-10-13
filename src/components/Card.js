@@ -24,7 +24,11 @@ function Card({ name, link, likes, onCardClick }) {
           src={basketIcon} 
           alt="Иконка мусорной корзины" />
         </button>
-        <img className="element__photo" src={link} />
+        <img 
+        className="element__photo" 
+        src={link}
+        alt={`На фото - ${name}`}
+        />
         <figcaption className="element__caption">
           <h2 className="element__title">{name}</h2>
           <div className="element__like-area">

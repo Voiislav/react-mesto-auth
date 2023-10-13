@@ -11,9 +11,9 @@ function App() {
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [isImagePopupOpen, setImagePopupOpen] = React.useState(false);
-  const [userName, setUserName] = React.useState();
-  const [userDescription, setUserDescription] = React.useState();
-  const [userAvatar, setUserAvatar] = React.useState();
+  const [userName, setUserName] = React.useState("");
+  const [userDescription, setUserDescription] = React.useState("");
+  const [userAvatar, setUserAvatar] = React.useState("");
   const [cards, setCards] = React.useState([]);
   const [selectedCard, setSelectedCard] = React.useState({});
 
@@ -31,24 +31,20 @@ function App() {
   }, []);
 
   function handleEditAvatarClick() {
-    setEditProfilePopupOpen(true);
-    document.addEventListener("keydown", closeOnEscapeButton);
+    setEditAvatarPopupOpen(true);
   }
 
   function handleEditProfileClick() {
-    setEditAvatarPopupOpen(true);
-    document.addEventListener("keydown", closeOnEscapeButton);
+    setEditProfilePopupOpen(true);
   }
 
   function handleAddPlaceClick() {
     setAddPlacePopupOpen(true);
-    document.addEventListener("keydown", closeOnEscapeButton);
   }
 
   function handleCardClick(card) {
     setSelectedCard(card);
     setImagePopupOpen(true);
-    document.addEventListener("keydown", closeOnEscapeButton);
   }
 
   function closeAllPopups() {
@@ -56,14 +52,23 @@ function App() {
     setEditAvatarPopupOpen(false);
     setAddPlacePopupOpen(false);
     setImagePopupOpen(false);
-    document.removeEventListener("keydown", closeOnEscapeButton);
   }
 
-  function closeOnEscapeButton(evt) {
-    if (evt.key === "Escape") {
-      closeAllPopups();
-    }
-  }
+  const isOpen = isAddPlacePopupOpen || isEditAvatarPopupOpen || isImagePopupOpen || isEditProfilePopupOpen;
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const closeByEscape = (evt) => {
+      if (evt.key === "Escape") {
+        closeAllPopups();
+      }
+    };
+
+    document.addEventListener("keydown", closeByEscape);
+
+    return () => document.removeEventListener("keydown", closeByEscape);
+  }, [isOpen]);
 
   return (
     <div className="page">

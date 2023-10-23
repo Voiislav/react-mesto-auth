@@ -10,8 +10,7 @@ import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 
 function App() {
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] =
-    React.useState(false);
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [isImagePopupOpen, setImagePopupOpen] = React.useState(false);
@@ -145,6 +144,12 @@ function App() {
   React.useEffect(() => {
     if (!isSomePopupOpen) return;
 
+    const closeByOverlayClick = (evt) => {
+      if (evt.target.classList.contains("popup")) {
+        closeAllPopups();
+      }
+    };
+
     const closeByEscape = (evt) => {
       if (evt.key === "Escape") {
         closeAllPopups();
@@ -152,8 +157,12 @@ function App() {
     };
 
     document.addEventListener("keydown", closeByEscape);
+    document.addEventListener("click", closeByOverlayClick);
 
-    return () => document.removeEventListener("keydown", closeByEscape);
+    return () => {
+      document.removeEventListener("keydown", closeByEscape);
+      document.removeEventListener("click", closeByOverlayClick);
+    };
   }, [isSomePopupOpen]);
 
   return (

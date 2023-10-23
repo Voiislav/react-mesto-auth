@@ -7,9 +7,15 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   function handleSubmit(evt) {
     evt.preventDefault();
     onUpdateAvatar({
-      avatar: avatarRef.current.value
-    })
+      avatar: avatarRef.current.value,
+    });
   }
+
+  React.useEffect(() => {
+    if (isOpen) {
+      avatarRef.current.value = "";
+    }
+  }, [isOpen]);
 
   return (
     <PopupWithForm
@@ -18,6 +24,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      buttonText="Сохранить"
     >
       <input
         type="url"
@@ -29,15 +36,6 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
         ref={avatarRef}
       />
       <span id="avatar-link-error" className="popup__error" />
-      <button
-        type="submit"
-        name="submitButton"
-        aria-label="Сохранить изменения"
-        className="popup__submit popup__submit_type_change-avatar"
-        disabled=""
-      >
-        Сохранить
-      </button>
     </PopupWithForm>
   );
 }

@@ -17,9 +17,11 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const currentUser = React.useContext(CurrentUserContext);
 
   React.useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-  }, [currentUser]);
+    if (isOpen) {
+      setName(currentUser.name);
+      setDescription(currentUser.about);
+    }
+  }, [isOpen, currentUser]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -36,11 +38,12 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      buttonText="Сохранить"
     >
       <input
         type="text"
         name="name"
-        value={name}
+        value={name || ""}
         onChange={handleChangeName}
         className="popup__text popup__text_type_name"
         id="user-name"
@@ -53,7 +56,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       <input
         type="text"
         name="job"
-        value={description}
+        value={description || ""}
         onChange={handleChangeDescription}
         className="popup__text popup__text_type_job"
         id="user-job"
@@ -63,14 +66,6 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
         maxLength={200}
       />
       <span id="user-job-error" className="popup__error" />
-      <button
-        type="submit"
-        name="submitButton"
-        aria-label="Сохранить изменения"
-        className="popup__submit popup__submit_type_edit"
-      >
-        Сохранить
-      </button>
     </PopupWithForm>
   );
 }

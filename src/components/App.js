@@ -2,7 +2,6 @@ import React from "react";
 import Header from "./Header.js";
 import Main from "./Main.js";
 import Footer from "./Footer.js";
-import PopupWithForm from "./PopupWithForm.js";
 import api from "../utils/Api.js";
 import ImagePopup from "./ImagePopup.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
@@ -11,13 +10,14 @@ import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 
 function App() {
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] =
+    React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [isImagePopupOpen, setImagePopupOpen] = React.useState(false);
   const [cards, setCards] = React.useState([]);
   const [selectedCard, setSelectedCard] = React.useState({});
-  const [currentUser, setCurrentUser] = React.useState("");
+  const [currentUser, setCurrentUser] = React.useState({});
 
   React.useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -72,14 +72,15 @@ function App() {
   }
 
   function handleAddPlaceSubmit({ name, link }) {
-    api.addNewCard({ name, link })
-    .then((newCard) => {
-      setCards([newCard, ...cards]);
-      closeAllPopups();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+    api
+      .addNewCard({ name, link })
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   function handleCardDelete(card) {
@@ -89,8 +90,10 @@ function App() {
       api
         .removeCard(card._id)
         .then(() => {
-          const updatedCards = cards.filter((c) => c._id !== card._id);
-          setCards(updatedCards);
+          setCards((initialCards) => {
+            const updatedCards = initialCards.filter((c) => c._id !== card._id);
+            return updatedCards;
+          });
         })
         .catch((error) => {
           console.error(error);
@@ -114,7 +117,7 @@ function App() {
         });
     } else {
       api
-        .putLike(card._id, true)
+        .putLike(card._id)
         .then((likedCard) => {
           setCards((state) =>
             state.map((c) => (c._id === card._id ? likedCard : c))
@@ -133,14 +136,14 @@ function App() {
     setImagePopupOpen(false);
   }
 
-  const isOpen =
+  const isSomePopupOpen =
     isAddPlacePopupOpen ||
     isEditAvatarPopupOpen ||
     isImagePopupOpen ||
     isEditProfilePopupOpen;
 
   React.useEffect(() => {
-    if (!isOpen) return;
+    if (!isSomePopupOpen) return;
 
     const closeByEscape = (evt) => {
       if (evt.key === "Escape") {
@@ -151,7 +154,7 @@ function App() {
     document.addEventListener("keydown", closeByEscape);
 
     return () => document.removeEventListener("keydown", closeByEscape);
-  }, [isOpen]);
+  }, [isSomePopupOpen]);
 
   return (
     <div className="page">
@@ -161,9 +164,6 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
-          userName={currentUser.name}
-          userDescription={currentUser.about}
-          userAvatar={currentUser.avatar}
           cards={cards}
           onCardClick={handleCardClick}
           onCardLike={handleCardLike}
@@ -175,25 +175,11 @@ function App() {
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
         />
-        <AddPlacePopup 
-        isOpen={isAddPlacePopupOpen} 
-        onClose={closeAllPopups}
-        onAddPlace={handleAddPlaceSubmit}
-        />
-        <PopupWithForm
-          title="Вы уверены?"
-          name="confirm"
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
-        >
-          <button
-            type="submit"
-            name="submitButton"
-            aria-label="Подтвердить удаление карточки"
-            className="popup__submit popup__submit_type_confirm"
-          >
-            Да
-          </button>
-        </PopupWithForm>
+          onAddPlace={handleAddPlaceSubmit}
+        />
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
@@ -203,7 +189,7 @@ function App() {
           card={selectedCard}
           isOpen={isImagePopupOpen}
           onClose={closeAllPopups}
-        ></ImagePopup>
+        />
       </CurrentUserContext.Provider>
     </div>
   );

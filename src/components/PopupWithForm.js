@@ -2,12 +2,15 @@ function PopupWithForm({
   name,
   title,
   children,
-  isOpen, 
+  isOpen,
   onClose,
-  onSubmit
+  onSubmit,
+  buttonText,
 }) {
   return (
-    <section className={`popup popup_type_${name} ${isOpen ? 'popup_opened' : ''}`}>
+    <section
+      className={`popup popup_type_${name} ${isOpen ? "popup_opened" : ""}`}
+    >
       <div className={`popup__container popup__container_type_${name}`}>
         <button
           type="button"
@@ -23,6 +26,14 @@ function PopupWithForm({
           onSubmit={onSubmit}
         >
           {children}{" "}
+          <button
+            type="submit"
+            name="submitButton"
+            aria-label="Сохранить изменения"
+            className="popup__submit popup__submit_type_add"
+          >
+            {buttonText}
+          </button>
         </form>
       </div>
     </section>

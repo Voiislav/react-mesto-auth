@@ -1,15 +1,10 @@
-import Card from './Card.js';
+import React from "react";
+import Card from "./Card.js";
+import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
-function Main({
-  onEditProfile,
-  onAddPlace,
-  onEditAvatar,
-  userName,
-  userDescription,
-  userAvatar,
-  cards,
-  onCardClick
-}) {
+function Main({ onEditProfile, onAddPlace, onEditAvatar, cards, onCardClick, onCardLike, onCardDelete }) {
+  const currentUser = React.useContext(CurrentUserContext);
+
   return (
     <>
       <main className="main">
@@ -24,13 +19,13 @@ function Main({
               />
               <img
                 className="profile__avatar"
-                src={userAvatar}
+                src={currentUser.avatar}
                 alt="На фото - Жак-Ив Кусто"
               />
             </div>
             <div className="profile__edit-area">
               <div className="profile__top-line">
-                <h1 className="profile__title">{userName}</h1>
+                <h1 className="profile__title">{currentUser.name}</h1>
                 <button
                   type="button"
                   className="profile__button profile__button_type_edit"
@@ -38,7 +33,7 @@ function Main({
                   aria-label="Изменить"
                 />
               </div>
-              <p className="profile__subtitle">{userDescription}</p>
+              <p className="profile__subtitle">{currentUser.about}</p>
             </div>
           </div>
           <button
@@ -49,15 +44,19 @@ function Main({
           />
         </section>
         <section className="elements">
-        {cards.map((card) => (
-          <Card
-            name={card.name}
-            link={card.link}
-            likes={card.likes}
-            key={card._id}
-            onCardClick={onCardClick}
-          />
-        ))}
+          {cards.map((card) => (
+            <Card
+              card={card}
+              name={card.name}
+              link={card.link}
+              likes={card.likes}
+              owner={card.owner}
+              key={card._id}
+              onCardClick={onCardClick}
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete}
+            />
+          ))}
         </section>
       </main>
     </>

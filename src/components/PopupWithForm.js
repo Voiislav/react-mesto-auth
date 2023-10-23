@@ -3,7 +3,8 @@ function PopupWithForm({
   title,
   children,
   isOpen, 
-  onClose
+  onClose,
+  onSubmit
 }) {
   return (
     <section className={`popup popup_type_${name} ${isOpen ? 'popup_opened' : ''}`}>
@@ -19,6 +20,7 @@ function PopupWithForm({
           className={`popup__form popup__form_type_${name}`}
           name={`submitForm${name}`}
           noValidate=""
+          onSubmit={onSubmit}
         >
           {children}{" "}
         </form>

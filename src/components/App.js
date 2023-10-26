@@ -8,12 +8,14 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
+import ConfirmDeletePopup from "./ConfirmDeletePopup.js";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [isImagePopupOpen, setImagePopupOpen] = React.useState(false);
+  const [isConfirmDeletePopupOpen, setConfirmDeletePopupOpen] = React.useState(false);
   const [cards, setCards] = React.useState([]);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
@@ -44,6 +46,11 @@ function App() {
   function handleCardClick(card) {
     setSelectedCard(card);
     setImagePopupOpen(true);
+  }
+
+  function handleDeleteCardClick(card) {
+    setSelectedCard(card);
+    setConfirmDeletePopupOpen(true);
   }
 
   function handleUpdateUser({ name, about }) {
@@ -89,16 +96,17 @@ function App() {
       api
         .removeCard(card._id)
         .then(() => {
-          setCards((initialCards) => {
-            const updatedCards = initialCards.filter((c) => c._id !== card._id);
-            return updatedCards;
-          });
+          setCards((initialCards) =>
+            initialCards.filter((c) => c._id !== card._id)
+          );
+          closeAllPopups();
         })
         .catch((error) => {
           console.error(error);
         });
     }
   }
+
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -133,13 +141,15 @@ function App() {
     setEditAvatarPopupOpen(false);
     setAddPlacePopupOpen(false);
     setImagePopupOpen(false);
+    setConfirmDeletePopupOpen(false);
   }
 
   const isSomePopupOpen =
     isAddPlacePopupOpen ||
     isEditAvatarPopupOpen ||
     isImagePopupOpen ||
-    isEditProfilePopupOpen;
+    isEditProfilePopupOpen ||
+    isConfirmDeletePopupOpen;
 
   React.useEffect(() => {
     if (!isSomePopupOpen) return;
@@ -176,7 +186,7 @@ function App() {
           cards={cards}
           onCardClick={handleCardClick}
           onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
+          onCardDelete={handleDeleteCardClick}
         />
         <Footer />
         <EditProfilePopup
@@ -198,6 +208,11 @@ function App() {
           card={selectedCard}
           isOpen={isImagePopupOpen}
           onClose={closeAllPopups}
+        />
+        <ConfirmDeletePopup
+          isOpen={isConfirmDeletePopupOpen}
+          onClose={closeAllPopups}
+          onConfirm={() => handleCardDelete(selectedCard)}
         />
       </CurrentUserContext.Provider>
     </div>

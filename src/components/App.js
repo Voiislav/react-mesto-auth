@@ -150,6 +150,10 @@ function App() {
     setConfirmDeletePopupOpen(false);
   }
 
+  function handleLogin() {
+    setLoggedIn(true);
+  }
+ 
   const isSomePopupOpen =
     isAddPlacePopupOpen ||
     isEditAvatarPopupOpen ||
@@ -187,7 +191,7 @@ function App() {
         <CurrentUserContext.Provider value={currentUser}>
           <Routes>
             <Route
-              path="/main"
+              path="/"
               loggedIn={loggedIn}
               element={
                 <ProtectedRouteElement loggedIn={loggedIn}>
@@ -206,8 +210,8 @@ function App() {
               }
             />
             <Route path="/sign-up" element={<Register />} />
-            <Route path="/sign-in" element={<Login />} />
-            <Route path="/" element={<Navigate to={loggedIn ? "/main" : "/sign-in"} replace />} />
+            <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
+            <Route path="/" element={<Navigate to={loggedIn ? "/" : "/sign-up"} replace />} />
           </Routes>
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}

@@ -9,10 +9,11 @@ import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 import ConfirmDeletePopup from "./ConfirmDeletePopup.js";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import Register from "./Register.js";
 import Login from "./Login.js";
 import ProtectedRouteElement from "./ProtectedRoute.js";
+import * as auth from "../auth.js";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] =
@@ -26,6 +27,7 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const [loggedIn, setLoggedIn] = React.useState(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -150,10 +152,6 @@ function App() {
     setConfirmDeletePopupOpen(false);
   }
 
-  function handleLogin() {
-    setLoggedIn(true);
-  }
- 
   const isSomePopupOpen =
     isAddPlacePopupOpen ||
     isEditAvatarPopupOpen ||
@@ -185,17 +183,46 @@ function App() {
     };
   }, [isSomePopupOpen]);
 
+  function handleLogin() {
+    setLoggedIn(true);
+  }
+
+  React.useEffect(() => {
+    handleTokenCheck(navigate);
+  }, []);
+
+  function handleTokenCheck(navigate) {
+    if (localStorage.getItem("token")) {
+      const token = localStorage.getItem("token");
+      auth.checkToken(token).then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          navigate("/main", { replace: true });
+        }
+      });
+    }
+  }
+
   return (
-    <BrowserRouter>
+    <CurrentUserContext.Provider value={currentUser}>
       <main className="page">
-        <CurrentUserContext.Provider value={currentUser}>
-          <Routes>
-            <Route
-              path="/"
-              loggedIn={loggedIn}
-              element={
-                <ProtectedRouteElement loggedIn={loggedIn}>
-                  <Header />
+        {loggedIn && <Header />}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              loggedIn ? (
+                <Navigate to="/main" replace />
+              ) : (
+                <Navigate to="/sign-in" replace />
+              )
+            }
+          />
+          <Route
+            path="/main"
+            element={
+              <ProtectedRouteElement
+                element={
                   <Main
                     onEditAvatar={handleEditAvatarClick}
                     onEditProfile={handleEditProfileClick}
@@ -205,42 +232,45 @@ function App() {
                     onCardLike={handleCardLike}
                     onCardDelete={handleDeleteCardClick}
                   />
-                  <Footer />
-                </ProtectedRouteElement>
-              }
-            />
-            <Route path="/sign-up" element={<Register />} />
-            <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
-            <Route path="/" element={<Navigate to={loggedIn ? "/" : "/sign-up"} replace />} />
-          </Routes>
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser}
+                }
+                loggedIn={loggedIn}
+              />
+            }
           />
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            onAddPlace={handleAddPlaceSubmit}
+          <Route path="/sign-up" element={<Register />} />
+          <Route
+            path="/sign-in"
+            element={<Login handleLogin={handleLogin} />}
           />
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}
-          />
-          <ImagePopup
-            card={selectedCard}
-            isOpen={isImagePopupOpen}
-            onClose={closeAllPopups}
-          />
-          <ConfirmDeletePopup
-            isOpen={isConfirmDeletePopupOpen}
-            onClose={closeAllPopups}
-            onConfirm={() => handleCardDelete(selectedCard)}
-          />
-        </CurrentUserContext.Provider>
+        </Routes>
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
+        <ImagePopup
+          card={selectedCard}
+          isOpen={isImagePopupOpen}
+          onClose={closeAllPopups}
+        />
+        <ConfirmDeletePopup
+          isOpen={isConfirmDeletePopupOpen}
+          onClose={closeAllPopups}
+          onConfirm={() => handleCardDelete(selectedCard)}
+        />
+        {loggedIn && <Footer />}
       </main>
-    </BrowserRouter>
+    </CurrentUserContext.Provider>
   );
 }
 

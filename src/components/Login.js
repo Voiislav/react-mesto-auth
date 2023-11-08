@@ -26,12 +26,12 @@ function Login({ handleLogin }) {
     }
     auth
       .authorize(formValue.email, formValue.password)
-      .then((token) => {
-        if (token) {
+      .then((data) => {
+        if (data.token) {
           setFormValue({ email: "", password: "" });
         }
         handleLogin();
-        navigate("/");
+        navigate("/main", {replace: true})
       })
       .catch(err => console.error(err));
   }

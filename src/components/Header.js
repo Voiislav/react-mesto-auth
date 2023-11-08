@@ -1,6 +1,8 @@
 import logo from "../images/mesto_logo.svg";
+import React from 'react';
+import { Route, Link } from 'react-router-dom';
 
-function Header({ headerButtonContent }) {
+function Header({ headerButtonContent, isLogged }) {
   return (
     <>
       <header className="header">

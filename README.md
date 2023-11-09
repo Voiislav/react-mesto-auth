@@ -8,6 +8,7 @@ This project is one-page responsive website in russian with content that can be 
 
 **What you can do on this website?**
 
+* Register / Log in / Log out
 * Change profile data
 * Put likes on cards with photos
 * Add new cards
@@ -17,6 +18,7 @@ This project is one-page responsive website in russian with content that can be 
 **Technologies**
 
 * Create React App
+* API
 
 **Design**
 

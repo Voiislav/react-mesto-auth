@@ -9,7 +9,7 @@ function ImagePopup({ card, onClose, isOpen }) {
           src={card.link}
           alt={`На фото - ${card.name}`}
         />
-        <h2 className="popup__title">{card.name}</h2>
+        <h2 className="popup__title_type_image">{card.name}</h2>
         <button
           type="button"
           className="popup__close"

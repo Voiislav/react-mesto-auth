@@ -28,6 +28,7 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [loggedIn, setLoggedIn] = React.useState(false);
   const navigate = useNavigate();
+  const [email, setEmail] = React.useState('');
 
   React.useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -197,6 +198,7 @@ function App() {
       auth.checkToken(token).then((res) => {
         if (res) {
           setLoggedIn(true);
+          setEmail(res.data.email);
           navigate("/main", { replace: true });
         }
       });
@@ -207,12 +209,13 @@ function App() {
     localStorage.removeItem("token");
     setLoggedIn(false);
     navigate("/sign-in", { replace: true });
+    setEmail('');
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <main className="page">
-      <Header onLogout={loggedIn ? handleLogout : null} />
+      <Header onLogout={loggedIn ? handleLogout : ''} email={email}/>
         <Routes>
           <Route
             path="/"

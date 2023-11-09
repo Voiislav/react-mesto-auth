@@ -57,3 +57,5 @@
 @import url(./blocks/popup/__icon/popup__icon.css);
 @import url(./blocks/popup/__title/_type/_infotooltip/popup__title_type_infotooltip.css);
 @import url(./blocks/popup/__container/_type/_infotooltip/popup__container_type_infotooltip.css);
+@import url(./blocks/header/__user-email/header__user-email.css);
+@import url(./blocks/header/__menu/header__menu.css);

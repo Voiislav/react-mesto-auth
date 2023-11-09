@@ -38,7 +38,6 @@ function Login({ handleLogin }) {
 
   return (
     <>
-      <Header headerButtonContent="Регистрация" />
       <div className="login">
         <h1 className="login__title">Вход</h1>
         <form onSubmit={handleSubmit} className="login__form">

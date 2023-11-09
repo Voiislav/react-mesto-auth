@@ -50,7 +50,7 @@ function Register() {
             status: "error",
             message: "Что-то пошло не так! Попробуйте еще раз."
           });
-          console.log(res.error);
+          console.error(res.error);
         }
       })
       .catch((err) => {
@@ -65,7 +65,6 @@ function Register() {
 
   return (
     <>
-      <Header headerButtonContent="Войти" />
       <div className="register">
         <h1 className="register__title">Регистрация</h1>
         <form onSubmit={handleSubmit} className="register__form">

@@ -212,7 +212,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <main className="page">
-        {loggedIn && <Header onLogout={handleLogout} />}
+      <Header onLogout={loggedIn ? handleLogout : null} />
         <Routes>
           <Route
             path="/"

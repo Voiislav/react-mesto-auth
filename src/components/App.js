@@ -203,10 +203,16 @@ function App() {
     }
   }
 
+  function handleLogout() {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    navigate("/sign-in", { replace: true });
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <main className="page">
-        {loggedIn && <Header />}
+        {loggedIn && <Header onLogout={handleLogout} />}
         <Routes>
           <Route
             path="/"

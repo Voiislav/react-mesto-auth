@@ -1,15 +1,17 @@
 import logo from "../images/mesto_logo.svg";
 import React from 'react';
-import { Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
-function Header({ headerButtonContent, isLogged }) {
+function Header({ onLogout }) {
   return (
     <>
       <header className="header">
         <img className="header__logo" src={logo} alt="Логотип Mesto Russia" />
-        <button className="header__button" type="button" aria-label="Войти или зарегистрироваться">
-          {headerButtonContent}
-        </button>
+        <Routes>
+        <Route path="/main" element={<Link onClick={onLogout} className="header__link" to="/sign-in">Выйти</Link>} />
+        <Route path="/sign-in" element={<Link className="header__link" to="/sign-up">Регистрация</Link>} />
+        <Route path="/sign-up" element={<Link className="header__link" to="/sign-in">Войти</Link>} />
+        </Routes>
       </header>
     </>
   );

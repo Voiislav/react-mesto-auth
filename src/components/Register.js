@@ -2,11 +2,18 @@ import React from "react";
 import Header from "./Header.js";
 import { Link, useNavigate } from "react-router-dom";
 import * as auth from "../auth.js";
+import InfoTooltip from "./InfoTooltip.js";
 
 function Register() {
   const [formValue, setFormValue] = React.useState({
     email: "",
     password: "",
+  });
+
+  const [infoTooltip, setInfoTooltip] = React.useState({
+    isOpen: false,
+    status: "",
+    message: "",
   });
 
   const navigate = useNavigate();
@@ -19,18 +26,41 @@ function Register() {
     });
   }
 
+  function closeInfoTooltip() {
+    setInfoTooltip({ ...infoTooltip, isOpen: false });
+    if (infoTooltip.status === "success") {
+      navigate("/sign-in");
+    }
+  }
+
   function handleSubmit(evt) {
     evt.preventDefault();
     auth
       .register(formValue.email, formValue.password)
       .then((res) => {
         if (res && !res.error) {
-          navigate("/sign-in");
+          setInfoTooltip({
+            isOpen: true,
+            status: "success",
+            message: "Вы успешно зарегистрировались!",
+          });
         } else {
+          setInfoTooltip({
+            isOpen: true,
+            status: "error",
+            message: "Что-то пошло не так! Попробуйте еще раз."
+          });
           console.log(res.error);
         }
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        setInfoTooltip({
+          isOpen: true,
+          status: "error",
+          message: "Что-то пошло не так! Попробуйте еще раз.",
+        });
+        console.error(err);
+      });
   }
 
   return (
@@ -71,6 +101,12 @@ function Register() {
           Уже зарегистрированы? Войти
         </Link>
       </div>
+      <InfoTooltip
+        isOpen={infoTooltip.isOpen}
+        onClose={closeInfoTooltip}
+        status={infoTooltip.status}
+        message={infoTooltip.message}
+      />
     </>
   );
 }

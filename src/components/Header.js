@@ -1,6 +1,5 @@
 import logo from "../images/mesto_logo.svg";
-import React from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 
 function Header({ onLogout }) {
   return (

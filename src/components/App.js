@@ -220,7 +220,7 @@ function App() {
               loggedIn ? (
                 <Navigate to="/main" replace />
               ) : (
-                <Navigate to="/sign-in" replace />
+                <Navigate to="/sign-in/" replace />
               )
             }
           />

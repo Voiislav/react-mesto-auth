@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as auth from "../auth.js";
 import InfoTooltip from "./InfoTooltip.js";
+import AuthForm from "./AuthForm.js";
 
 function Register() {
   const [formValue, setFormValue] = React.useState({
@@ -60,35 +61,7 @@ function Register() {
   return (
     <main className="register">
       <h1 className="register__title">Регистрация</h1>
-      <form onSubmit={handleSubmit} className="register__form">
-        <input
-          onChange={handleChange}
-          className="register__input"
-          type="email"
-          id="email"
-          name="email"
-          value={formValue.email}
-          placeholder="Email"
-          required
-        ></input>
-        <input
-          onChange={handleChange}
-          className="register__input"
-          type="password"
-          id="password"
-          name="password"
-          value={formValue.password}
-          placeholder="Пароль"
-          required
-        ></input>
-        <button
-          type="submit"
-          onSubmit={handleSubmit}
-          className="register__submit"
-        >
-          Зарегистрироваться
-        </button>
-      </form>
+      <AuthForm handleSubmit={handleSubmit} handleChange={handleChange} submitButtonText="Зарегистрироваться" formValue={formValue}/>
       <Link to="/sign-in" className="register__login-link">
         Уже зарегистрированы? Войти
       </Link>

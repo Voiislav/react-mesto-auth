@@ -1,6 +1,7 @@
 import React from "react";
 import * as auth from "../auth.js";
 import { useNavigate } from "react-router-dom";
+import AuthForm from "./AuthForm.js";
 
 function Login({ handleLogin }) {
   const [formValue, setFormValue] = React.useState({
@@ -45,31 +46,7 @@ function Login({ handleLogin }) {
   return (
     <main className="login">
       <h1 className="login__title">Вход</h1>
-      <form onSubmit={handleSubmit} className="login__form">
-        <input
-          onChange={handleChange}
-          className="login__input"
-          type="email"
-          id="email"
-          name="email"
-          value={formValue.email}
-          placeholder="Email"
-          required
-        ></input>
-        <input
-          onChange={handleChange}
-          className="login__input"
-          type="password"
-          id="password"
-          name="password"
-          value={formValue.password}
-          placeholder="Пароль"
-          required
-        ></input>
-        <button onSubmit={handleSubmit} type="submit" className="login__submit">
-          Войти
-        </button>
-      </form>
+      <AuthForm handleSubmit={handleSubmit} handleChange={handleChange} submitButtonText="Войти" formValue={formValue}/>
     </main>
   );
 }

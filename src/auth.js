@@ -1,7 +1,13 @@
+import { checkResponse } from "./utils/CheckResponse.js";
+
 export const BASE_URL = "https://auth.nomoreparties.co";
 
+const request = (url, options) => {
+  return fetch(url, options).then(checkResponse);
+}
+
 export const register = (email, password) => {
-  return fetch(`${BASE_URL}/signup`, {
+  return request(`${BASE_URL}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -11,21 +17,10 @@ export const register = (email, password) => {
       password: password,
     }),
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      if (err.status === 400) {
-        console.log("400 - некорректно заполнено одно из полей");
-      }
-    });
 };
 
 export const authorize = (email, password) => {
-  return fetch(`${BASE_URL}/signin`, {
+  return request(`${BASE_URL}/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -35,39 +30,21 @@ export const authorize = (email, password) => {
       password: password,
     }),
   })
-    .then((res) => res.json())
     .then((data) => {
       if (data.token) {
         localStorage.setItem("token", data.token);
         return data;
       }
     })
-    .catch((err) => {
-      if (err.status === 400) {
-        console.log("400 - не передано одно из полей");
-      }
-      if (err.status === 401) {
-        console.log("401 - пользователь с email не найден");
-      }
-    });
 };
 
 export const checkToken = (token) => {
-  return fetch(`${BASE_URL}/users/me`, {
+  return request(`${BASE_URL}/users/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   })
-    .then((res) => res.json())
     .then((data) => data)
-    .catch((err) => {
-      if (err.status === 400) {
-        console.log("400 — Токен не передан или передан не в том формате");
-      }
-      if (err.status === 401) {
-        console.log("401 — Переданный токен некорректен");
-      }
-    });
 };

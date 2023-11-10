@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "./Header.js";
 import * as auth from "../auth.js";
 import { useNavigate } from "react-router-dom";
 
@@ -31,46 +30,47 @@ function Login({ handleLogin }) {
           setFormValue({ email: "", password: "" });
         }
         handleLogin();
-        navigate("/main", {replace: true})
+        navigate("/main", { replace: true });
       })
-      .catch(err => console.error(err));
+      .catch((err) => {
+        if (err.status === 400) {
+          console.log("400 - не передано одно из полей");
+        }
+        if (err.status === 401) {
+          console.log("401 - пользователь с email не найден");
+        }
+      });
   }
 
   return (
-    <>
-      <div className="login">
-        <h1 className="login__title">Вход</h1>
-        <form onSubmit={handleSubmit} className="login__form">
-          <input
-            onChange={handleChange}
-            className="login__input"
-            type="email"
-            id="email"
-            name="email"
-            value={formValue.email}
-            placeholder="Email"
-            required
-          ></input>
-          <input
-            onChange={handleChange}
-            className="login__input"
-            type="password"
-            id="password"
-            name="password"
-            value={formValue.password}
-            placeholder="Пароль"
-            required
-          ></input>
-          <button
-            onSubmit={handleSubmit}
-            type="submit"
-            className="login__submit"
-          >
-            Войти
-          </button>
-        </form>
-      </div>
-    </>
+    <main className="login">
+      <h1 className="login__title">Вход</h1>
+      <form onSubmit={handleSubmit} className="login__form">
+        <input
+          onChange={handleChange}
+          className="login__input"
+          type="email"
+          id="email"
+          name="email"
+          value={formValue.email}
+          placeholder="Email"
+          required
+        ></input>
+        <input
+          onChange={handleChange}
+          className="login__input"
+          type="password"
+          id="password"
+          name="password"
+          value={formValue.password}
+          placeholder="Пароль"
+          required
+        ></input>
+        <button onSubmit={handleSubmit} type="submit" className="login__submit">
+          Войти
+        </button>
+      </form>
+    </main>
   );
 }
 

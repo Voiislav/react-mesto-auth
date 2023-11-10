@@ -28,7 +28,7 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [loggedIn, setLoggedIn] = React.useState(false);
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = React.useState("");
 
   React.useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -195,13 +195,23 @@ function App() {
   function handleTokenCheck(navigate) {
     if (localStorage.getItem("token")) {
       const token = localStorage.getItem("token");
-      auth.checkToken(token).then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          setEmail(res.data.email);
-          navigate("/main", { replace: true });
-        }
-      });
+      auth
+        .checkToken(token)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            setEmail(res.data.email);
+            navigate("/main", { replace: true });
+          }
+        })
+        .catch((err) => {
+          if (err.status === 400) {
+            console.log("400 — Токен не передан или передан не в том формате");
+          }
+          if (err.status === 401) {
+            console.log("401 — Переданный токен некорректен");
+          }
+        });
     }
   }
 
@@ -209,13 +219,13 @@ function App() {
     localStorage.removeItem("token");
     setLoggedIn(false);
     navigate("/sign-in", { replace: true });
-    setEmail('');
+    setEmail("");
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <main className="page">
-      <Header onLogout={loggedIn ? handleLogout : ''} email={email}/>
+        <Header onLogout={loggedIn ? handleLogout : ""} email={email} />
         <Routes>
           <Route
             path="/"

@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "./Header.js";
 import { Link, useNavigate } from "react-router-dom";
 import * as auth from "../auth.js";
 import InfoTooltip from "./InfoTooltip.js";
@@ -44,13 +43,6 @@ function Register() {
             status: "success",
             message: "Вы успешно зарегистрировались!",
           });
-        } else {
-          setInfoTooltip({
-            isOpen: true,
-            status: "error",
-            message: "Что-то пошло не так! Попробуйте еще раз."
-          });
-          console.error(res.error);
         }
       })
       .catch((err) => {
@@ -59,54 +51,54 @@ function Register() {
           status: "error",
           message: "Что-то пошло не так! Попробуйте еще раз.",
         });
-        console.error(err);
+        if (err.status === 400) {
+          console.log("400 - некорректно заполнено одно из полей");
+        }
       });
   }
 
   return (
-    <>
-      <div className="register">
-        <h1 className="register__title">Регистрация</h1>
-        <form onSubmit={handleSubmit} className="register__form">
-          <input
-            onChange={handleChange}
-            className="register__input"
-            type="email"
-            id="email"
-            name="email"
-            value={formValue.email}
-            placeholder="Email"
-            required
-          ></input>
-          <input
-            onChange={handleChange}
-            className="register__input"
-            type="password"
-            id="password"
-            name="password"
-            value={formValue.password}
-            placeholder="Пароль"
-            required
-          ></input>
-          <button
-            type="submit"
-            onSubmit={handleSubmit}
-            className="register__submit"
-          >
-            Зарегистрироваться
-          </button>
-        </form>
-        <Link to="/sign-in" className="register__login-link">
-          Уже зарегистрированы? Войти
-        </Link>
-      </div>
+    <main className="register">
+      <h1 className="register__title">Регистрация</h1>
+      <form onSubmit={handleSubmit} className="register__form">
+        <input
+          onChange={handleChange}
+          className="register__input"
+          type="email"
+          id="email"
+          name="email"
+          value={formValue.email}
+          placeholder="Email"
+          required
+        ></input>
+        <input
+          onChange={handleChange}
+          className="register__input"
+          type="password"
+          id="password"
+          name="password"
+          value={formValue.password}
+          placeholder="Пароль"
+          required
+        ></input>
+        <button
+          type="submit"
+          onSubmit={handleSubmit}
+          className="register__submit"
+        >
+          Зарегистрироваться
+        </button>
+      </form>
+      <Link to="/sign-in" className="register__login-link">
+        Уже зарегистрированы? Войти
+      </Link>
       <InfoTooltip
         isOpen={infoTooltip.isOpen}
         onClose={closeInfoTooltip}
         status={infoTooltip.status}
         message={infoTooltip.message}
       />
-    </>
+    </main>
   );
 }
 

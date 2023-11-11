@@ -14,6 +14,7 @@ import Register from "./Register.js";
 import Login from "./Login.js";
 import ProtectedRouteElement from "./ProtectedRoute.js";
 import * as auth from "../auth.js";
+import InfoTooltip from "./InfoTooltip.js";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] =
@@ -29,6 +30,11 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
+  const [infoTooltip, setInfoTooltip] = React.useState({
+    isOpen: false,
+    status: "",
+    message: "",
+  });
 
   React.useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -40,6 +46,18 @@ function App() {
         console.error(error);
       });
   }, []);
+
+  function openInfoTooltip(status, message) {
+    setInfoTooltip({
+      isOpen: true,
+      status: status,
+      message: message,
+    });
+  }
+
+  function closeInfoTooltip() {
+    setInfoTooltip({ ...infoTooltip, isOpen: false });
+  }
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
@@ -256,12 +274,26 @@ function App() {
               />
             }
           />
-          <Route path="/sign-up" element={<Register />} />
           <Route
             path="/sign-in"
             element={<Login handleLogin={handleLogin} />}
           />
+          <Route
+            path="/sign-up"
+            element={
+              <Register
+                onInfoTooltipOpen={openInfoTooltip}
+                onInfoTooltipClose={closeInfoTooltip}
+              />
+            }
+          />
         </Routes>
+        <InfoTooltip
+          isOpen={infoTooltip.isOpen}
+          onClose={closeInfoTooltip}
+          status={infoTooltip.status}
+          message={infoTooltip.message}
+        />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}

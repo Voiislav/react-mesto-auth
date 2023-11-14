@@ -18,8 +18,8 @@ This project is one-page responsive website in russian with content that can be 
 **Technologies**
 
 * Create React App
-* API
+* REST API
 
 **Design**
 
-* [Figma link](https://www.figma.com/file/2cn9N9jSkmxD84oJik7xL7/JavaScript.-Sprint-4?node-id=0%3A1)
+* [Figma link](https://www.figma.com/file/5H3gsn5lIGPwzBPby9jAOo/Sprint-14-RU?node-id=0%3A1)

@@ -219,7 +219,7 @@ function App() {
           if (res) {
             setLoggedIn(true);
             setEmail(res.data.email);
-            navigate("/main", { replace: true });
+            navigate("/react-mesto-auth", { replace: true });
           }
         })
         .catch((err) => {

@@ -31,7 +31,7 @@ function Login({ handleLogin }) {
           setFormValue({ email: "", password: "" });
         }
         handleLogin();
-        navigate("/react-mesto-auth", { replace: true });
+        navigate("/main", { replace: true });
       })
       .catch((err) => {
         if (err.status === 400) {

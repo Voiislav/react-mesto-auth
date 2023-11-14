@@ -219,7 +219,7 @@ function App() {
           if (res) {
             setLoggedIn(true);
             setEmail(res.data.email);
-            navigate("/react-mesto-auth", { replace: true });
+            navigate("/main", { replace: true });
           }
         })
         .catch((err) => {
@@ -249,14 +249,14 @@ function App() {
             path="/"
             element={
               loggedIn ? (
-                <Navigate to="/react-mesto-auth" replace />
+                <Navigate to="/main" replace />
               ) : (
                 <Navigate to="/sign-in/" replace />
               )
             }
           />
           <Route
-            path="/react-mesto-auth"
+            path="/main"
             element={
               <ProtectedRouteElement
                 element={

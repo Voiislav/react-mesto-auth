@@ -7,7 +7,7 @@ function Header({ onLogout, email }) {
       <header className="header">
         <img className="header__logo" src={logo} alt="Логотип Mesto Russia" />
         <Routes>
-        <Route path="/main" element={<div className="header__menu"><p className="header__user-email">{email}</p><Link onClick={onLogout} className="header__link" to="/sign-in">Выйти</Link></div>} />
+        <Route path="/react-mesto-auth" element={<div className="header__menu"><p className="header__user-email">{email}</p><Link onClick={onLogout} className="header__link" to="/sign-in">Выйти</Link></div>} />
         <Route path="/sign-in" element={<Link className="header__link" to="/sign-up">Регистрация</Link>} />
         <Route path="/sign-up" element={<Link className="header__link" to="/sign-in">Войти</Link>} />
         </Routes>

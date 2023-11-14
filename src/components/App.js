@@ -219,7 +219,7 @@ function App() {
           if (res) {
             setLoggedIn(true);
             setEmail(res.data.email);
-            navigate("/main", { replace: true });
+            navigate("/", { replace: true });
           }
         })
         .catch((err) => {
@@ -249,14 +249,14 @@ function App() {
             path="/"
             element={
               loggedIn ? (
-                <Navigate to="/main" replace />
+                <Navigate to="/" replace />
               ) : (
                 <Navigate to="/sign-in/" replace />
               )
             }
           />
           <Route
-            path="/main"
+            path="/"
             element={
               <ProtectedRouteElement
                 element={

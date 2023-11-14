@@ -4,7 +4,7 @@
 
 This project is one-page responsive website in russian with content that can be changed or added by user. Сreated using React.
 
-[Project link](https://voiislav.github.io/mesto-react/)
+[Project link](https://voiislav.github.io/mesto-react-auth)
 
 **What you can do on this website?**
 
